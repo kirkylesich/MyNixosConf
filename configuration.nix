@@ -42,11 +42,10 @@
   services.xserver = {
     enable = true;
     layout = "us";
-    windowManager.xmonad.enable = true;
+    windowManager.i3.enable = true;
     desktopManager.xterm.enable = false;
-    displayManager.defaultSession = "none+xmonad";
-    wacom.enable = true;
-    videoDrivers = ["modesetting" "nvidia"];
+    displayManager.defaultSession = "none+i3";
+    videoDrivers = ["intel"];
   };
   hardware.nvidia.prime = {
     offload.enable = true;
@@ -70,9 +69,11 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
-  
-  services.picom.enable = true;
-  services.picom.vSync = true;
+
+	 services.picom = {
+	  enable = true;
+	  vSync = true;
+	}; 
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.kirill = {
@@ -85,6 +86,7 @@
     shell = pkgs.fish;
   }; 
 
+  programs.steam.enable = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -98,18 +100,24 @@
     # terminals
     st
     alacritty 
-
-    haskellPackages.libmpd   # Shows MPD status in xmobar
-    haskellPackages.xmobar   # A Minimalistic Text Based Status Bar
-    haskellPackages.xmonad
+    
+    # programming
+    nodejs
+    python3
+    python38Packages.pip
+    clang
 
 
     # additional programs
     zoom-us
     tdesktop
     discord
+    flameshot
+    steam
+    (steam.override { withPrimus = true; extraPkgs = pkgs: [ bumblebee glxinfo]; nativeOnly = true; }).run
 
     vim
+    neovim
     firefox
     chromium
 
