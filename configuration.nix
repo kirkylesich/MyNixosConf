@@ -46,7 +46,18 @@
     desktopManager.xterm.enable = false;
     displayManager.defaultSession = "none+xmonad";
     wacom.enable = true;
+    videoDrivers = ["modesetting" "nvidia"];
   };
+  hardware.nvidia.prime = {
+    offload.enable = true;
+
+    # Bus ID of the Intel GPU. You can find it using lspci, either under 3D or VGA
+    intelBusId = "PCI:0:2:0";
+
+    # Bus ID of the NVIDIA GPU. You can find it using lspci, either under 3D or VGA
+    nvidiaBusId = "PCI:2:0:0";
+  };
+  hardware.bumblebee.enable = true;
   # Configure keymap in X11
   # services.xserver.xkbOptions = "eurosign:e";
 
@@ -77,15 +88,13 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim
-    firefox
-    chromium
     git
     networkmanager
+    pciutils
     wpa_supplicant
     dmenu
     kate
-
+    glxinfo
     # terminals
     st
     alacritty 
@@ -100,6 +109,9 @@
     tdesktop
     discord
 
+    vim
+    firefox
+    chromium
 
   ];
 
