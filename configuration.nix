@@ -18,7 +18,7 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
-  # time.timeZone = "Europe/Amsterdam";
+  time.timeZone = "Asia/Yekaterinburg";
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -32,12 +32,14 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
   # console = {
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
   # };
   nixpkgs.config.allowUnfree = true;
+
+  virtualisation.docker.enable = true;
   
   services.xserver = {
     enable = true;
@@ -78,7 +80,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.kirill = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
   
   programs.fish.enable = true;
@@ -87,6 +89,8 @@
   }; 
 
   programs.steam.enable = true;
+  systemd.services.nginx.serviceConfig.ReadWritePaths = [ "/var/spool/nginx/logs/" ];
+  services.nginx.enable = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -97,6 +101,8 @@
     dmenu
     kate
     glxinfo
+    tree
+    wget
     # terminals
     st
     alacritty 
@@ -105,7 +111,21 @@
     nodejs
     python3
     python38Packages.pip
+    python27
     clang
+    clang-tools
+    docker
+    docker-compose
+    astyle
+    gcc
+    gnumake
+    cmake
+    binutils-unwrapped
+    zlib
+    cargo
+    rustup
+    rls
+    nginx
 
 
     # additional programs
@@ -113,13 +133,20 @@
     tdesktop
     discord
     flameshot
+    jetbrains.pycharm-professional
     steam
+    postman
     (steam.override { withPrimus = true; extraPkgs = pkgs: [ bumblebee glxinfo]; nativeOnly = true; }).run
+    libreoffice-fresh
+    hunspellDicts.ru_RU
 
     vim
     neovim
     firefox
     chromium
+    xfce.thunar
+    wine
+    unzip
 
   ];
 
